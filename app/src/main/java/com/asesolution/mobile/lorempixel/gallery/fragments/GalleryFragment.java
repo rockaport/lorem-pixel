@@ -6,13 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.asesolution.mobile.lorempixel.R;
 import com.asesolution.mobile.lorempixel.gallery.adapters.GalleryListAdapter;
+import com.asesolution.mobile.lorempixel.gallery.callbacks.GalleryItemTouchHelperCallback;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,6 +21,9 @@ import butterknife.ButterKnife;
 public class GalleryFragment extends Fragment {
     @Bind(R.id.gallery_list)
     RecyclerView recyclerView;
+
+    GalleryListAdapter galleryListAdapter;
+    GalleryItemTouchHelperCallback galleryItemTouchHelperCallback;
 
     @Nullable
     @Override
@@ -31,9 +35,15 @@ public class GalleryFragment extends Fragment {
         int imageSize = getResources().getDimensionPixelSize(R.dimen.gallery_image_size);
         int spanCount = width / imageSize;
 
+        galleryListAdapter = new GalleryListAdapter();
+        galleryItemTouchHelperCallback = new GalleryItemTouchHelperCallback(galleryListAdapter);
+
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), spanCount));
-        recyclerView.setAdapter(new GalleryListAdapter(imageSize));
-        recyclerView.addItemDecoration(new SpacesItemDecoration((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics())));
+        recyclerView.setAdapter(galleryListAdapter);
+//        recyclerView.addItemDecoration(new SpacesItemDecoration((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics())));
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(galleryItemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         return view;
     }

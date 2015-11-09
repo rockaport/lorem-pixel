@@ -12,6 +12,9 @@ public final class PaletteTransformation implements Transformation {
     private static final PaletteTransformation INSTANCE = new PaletteTransformation();
     private static final Map<Bitmap, Palette> CACHE = new WeakHashMap<>();
 
+    private PaletteTransformation() {
+    }
+
     public static PaletteTransformation instance() {
         return INSTANCE;
     }
@@ -19,8 +22,6 @@ public final class PaletteTransformation implements Transformation {
     public static Palette getPalette(Bitmap bitmap) {
         return CACHE.get(bitmap);
     }
-
-    private PaletteTransformation() {}
 
     @Override
     public Bitmap transform(Bitmap source) {
