@@ -1,10 +1,12 @@
 package com.asesolution.mobile.lorempixel.data;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class Images {
+public class LoremPixelRepository implements ImagesRepository {
     public static final String LOREM_URL = "http://lorempixel.com";
     public static final int MAX_PER_CATEGORY = 11;
     public static final String[] categories = {
@@ -59,11 +61,20 @@ public class Images {
         return urls;
     }
 
+    public static ArrayList<String> getShuffledUrls(int size) {
+        return getShuffledUrls(size, size);
+    }
+
     public static String parseCategory(String url) {
         return url.split("/")[5];
     }
 
     public static String parseNumber(String url) {
         return url.split("/")[6];
+    }
+
+    @Override
+    public void getImageUrls(int size, @NonNull LoadImagesCallback callback) {
+        callback.onImagesLoaded(getShuffledUrls(size));
     }
 }

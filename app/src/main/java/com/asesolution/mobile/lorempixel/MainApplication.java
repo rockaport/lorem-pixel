@@ -8,6 +8,14 @@ public class MainApplication extends Application {
     private static Context context;
     private static Resources resources;
 
+    public static Resources getStaticResources() {
+        return resources;
+    }
+
+    public static Context getStaticContext() {
+        return context;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -19,14 +27,6 @@ public class MainApplication extends Application {
         if (resources == null) {
             resources = getResources();
         }
-    }
-
-    public static Resources getStaticResources() {
-        return resources;
-    }
-
-    public static Context getStaticContext() {
-        return context;
     }
 
 }

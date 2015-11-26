@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.asesolution.mobile.lorempixel.R;
-import com.asesolution.mobile.lorempixel.data.Images;
+import com.asesolution.mobile.lorempixel.data.LoremPixelRepository;
 import com.asesolution.mobile.lorempixel.gallery.PaletteTransformation;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 
 public class ImageViewActivity extends AppCompatActivity {
     public static final String EXTRA_URL = ImageViewActivity.class.getCanonicalName() + "EXTRA_URL";
+
     @Bind(R.id.image_view)
     ImageView imageView;
     @Bind(R.id.image_view_category)
@@ -48,11 +49,11 @@ public class ImageViewActivity extends AppCompatActivity {
         String inputUrl = getIntent().getStringExtra(EXTRA_URL);
 
         // Process the category and number
-        String urlCategory = Images.parseCategory(inputUrl);
-        int number = Integer.parseInt(Images.parseNumber(inputUrl));
+        String urlCategory = LoremPixelRepository.parseCategory(inputUrl);
+        int number = Integer.parseInt(LoremPixelRepository.parseNumber(inputUrl));
 
         // Get the actual url with correct 16:9 aspect ratio size
-        String url = Images.getImageUrl(metrics.widthPixels, metrics.widthPixels * 9 / 16, urlCategory, number);
+        String url = LoremPixelRepository.getImageUrl(metrics.widthPixels, metrics.widthPixels * 9 / 16, urlCategory, number);
 
         // Fetch the image via picasso
         Picasso.with(this)

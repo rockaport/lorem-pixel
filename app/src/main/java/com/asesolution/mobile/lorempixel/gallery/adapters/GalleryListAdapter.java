@@ -1,28 +1,24 @@
 package com.asesolution.mobile.lorempixel.gallery.adapters;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
-import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.asesolution.mobile.lorempixel.MainApplication;
 import com.asesolution.mobile.lorempixel.R;
-import com.asesolution.mobile.lorempixel.data.Images;
+import com.asesolution.mobile.lorempixel.data.LoremPixelRepository;
 import com.asesolution.mobile.lorempixel.gallery.PaletteTransformation;
-import com.asesolution.mobile.lorempixel.gallery.activities.ImageViewActivity;
+import com.asesolution.mobile.lorempixel.gallery.interfaces.GalleryContract;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -34,12 +30,14 @@ import butterknife.ButterKnife;
 public class GalleryListAdapter extends RecyclerView.Adapter<GalleryListAdapter.ViewHolder> {
     int imageSize;
     ArrayList<String> urls;
-    ArrayMap<Integer, Boolean> favorites;
+    private ArrayList<String> favorites;
+    private GalleryContract.UserAction userAction;
 
-    public GalleryListAdapter() {
-        this.imageSize = MainApplication.getStaticResources().getDimensionPixelSize(R.dimen.gallery_image_size);
-        urls = Images.getShuffledUrls(imageSize, imageSize);
-        favorites = new ArrayMap<>(urls.size());
+    public GalleryListAdapter(GalleryContract.UserAction userAction, int imageSize, ArrayList<String> urls, ArrayList<String> favorites) {
+        this.userAction = userAction;
+        this.imageSize = imageSize;
+        this.urls = urls;
+        this.favorites = favorites;
     }
 
     @Override
@@ -52,7 +50,7 @@ public class GalleryListAdapter extends RecyclerView.Adapter<GalleryListAdapter.
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // Get the URL and parse the category from it
         final String url = urls.get(position);
-        String category = Images.parseCategory(url);
+        String category = LoremPixelRepository.parseCategory(url);
 
         // Load the image view from the url
         Picasso.with(holder.thumbnail.getContext())
@@ -83,11 +81,8 @@ public class GalleryListAdapter extends RecyclerView.Adapter<GalleryListAdapter.
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = MainApplication.getStaticContext();
-                Intent intent = new Intent(context, ImageViewActivity.class);
-                intent.putExtra(ImageViewActivity.EXTRA_URL, urls.get(position));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                userAction.showFullScreenImage(urls.get(position));
+
             }
         });
 
@@ -95,15 +90,20 @@ public class GalleryListAdapter extends RecyclerView.Adapter<GalleryListAdapter.
         holder.favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                favorites.put(position, isChecked);
+                String url = urls.get(position);
+
+                if (isChecked) {
+                    userAction.addToFavorites(url);
+                } else {
+                    userAction.removeFromFavorites(url);
+                }
             }
         });
 
         // Synchronize the state of the favorite button
-        if (favorites.containsKey(position)) {
-            holder.favorite.setChecked(favorites.get(position));
+        if (favorites.contains(url)) {
+            holder.favorite.setChecked(true);
         } else {
-            favorites.put(position, false);
             holder.favorite.setChecked(false);
         }
     }
@@ -132,7 +132,7 @@ public class GalleryListAdapter extends RecyclerView.Adapter<GalleryListAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.gallery_list_container)
-        FrameLayout container;
+        RelativeLayout container;
         @Bind(R.id.gallery_list_thumbnail)
         ImageButton thumbnail;
         @Bind(R.id.gallery_list_category)
