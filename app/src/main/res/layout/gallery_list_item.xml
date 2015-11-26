@@ -1,46 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/gallery_list_container"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="@dimen/gallery_image_size"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp"
+    tools:showIn="@layout/fragment_gallery">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:layout_width="96dp"
-        android:layout_height="wrap_content"
-        card_view:cardBackgroundColor="@color/colorPrimary"
-        card_view:cardCornerRadius="0dp"
-        card_view:cardElevation="4dp">
+    <ImageButton
+        android:id="@+id/gallery_list_thumbnail"
+        android:layout_width="@dimen/gallery_image_size"
+        android:layout_height="@dimen/gallery_image_size"
+        android:layout_centerInParent="true"
+        android:src="@color/md_black_1000"
+        android:background="?attr/selectableItemBackground" />
 
-        <ImageButton
-            android:id="@+id/gallery_list_thumbnail"
+    <FrameLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="@dimen/gallery_image_size"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/gallery_list_category"
             android:layout_width="match_parent"
-            android:layout_height="96dp"
-            android:background="?attr/selectableItemBackground"/>
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|start"
+            android:background="@color/md_grey_600"
+            android:gravity="center_vertical"
+            android:paddingStart="4dp"
+            android:textColor="@color/md_white_1000"
+            tools:text="John" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="26dp"
-            android:layout_gravity="bottom">
-
-            <TextView
-                android:id="@+id/gallery_list_category"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:background="@color/md_grey_600"
-                android:gravity="center_vertical"
-                android:paddingStart="4dp"
-                android:textColor="@color/md_white_1000"
-                tools:text="John" />
-
-            <CheckBox
-                android:id="@+id/gallery_list_favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom|end" />
-        </FrameLayout>
-    </android.support.v7.widget.CardView>
-</FrameLayout>
+        <CheckBox
+            android:id="@+id/gallery_list_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|end" />
+    </FrameLayout>
+</RelativeLayout>
