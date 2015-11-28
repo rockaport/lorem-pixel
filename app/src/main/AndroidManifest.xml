@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".gallery.activities.ImageViewActivity"
+            android:name=".fullscreenimage.activities.FullScreenImageActivity"
             android:label="@string/title_activity_image_view"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme">

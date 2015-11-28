@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import com.asesolution.mobile.lorempixel.FragmentContract;
 import com.asesolution.mobile.lorempixel.Injection;
 import com.asesolution.mobile.lorempixel.R;
-import com.asesolution.mobile.lorempixel.gallery.activities.ImageViewActivity;
+import com.asesolution.mobile.lorempixel.fullscreenimage.activities.FullScreenImageActivity;
 import com.asesolution.mobile.lorempixel.gallery.adapters.GalleryListAdapter;
 import com.asesolution.mobile.lorempixel.gallery.callbacks.GalleryItemTouchHelperCallback;
 import com.asesolution.mobile.lorempixel.gallery.interfaces.GalleryContract;
@@ -80,15 +80,15 @@ public class GalleryFragment extends Fragment implements GalleryContract.View, F
 
     @Override
     public void showFullScreenImageUi(@NonNull String url) {
-        Intent intent = new Intent(getContext(), ImageViewActivity.class);
-        intent.putExtra(ImageViewActivity.EXTRA_URL, url);
+        Intent intent = new Intent(getContext(), FullScreenImageActivity.class);
+        intent.putExtra(FullScreenImageActivity.EXTRA_URL, url);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
     @Override
     public void showGallery(ArrayList<String> urls) {
-        GalleryListAdapter galleryListAdapter = new GalleryListAdapter(actionListener, imageSize, urls, Injection.provideFavoritesRepository().getFavorites());
+        GalleryListAdapter galleryListAdapter = new GalleryListAdapter(actionListener, urls, Injection.provideFavoritesRepository().getFavorites());
         recyclerView.setAdapter(galleryListAdapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new GalleryItemTouchHelperCallback(galleryListAdapter));

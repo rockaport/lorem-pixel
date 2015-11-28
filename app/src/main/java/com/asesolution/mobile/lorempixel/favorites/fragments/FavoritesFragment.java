@@ -20,7 +20,7 @@ import com.asesolution.mobile.lorempixel.R;
 import com.asesolution.mobile.lorempixel.favorites.adapters.FavoritesListAdapter;
 import com.asesolution.mobile.lorempixel.favorites.interfaces.FavoritesContract;
 import com.asesolution.mobile.lorempixel.favorites.presenters.FavoritesPresenter;
-import com.asesolution.mobile.lorempixel.gallery.activities.ImageViewActivity;
+import com.asesolution.mobile.lorempixel.fullscreenimage.activities.FullScreenImageActivity;
 
 import java.util.ArrayList;
 
@@ -94,8 +94,8 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
 
     @Override
     public void showFullScreenImageUi(@NonNull String url) {
-        Intent intent = new Intent(getContext(), ImageViewActivity.class);
-        intent.putExtra(ImageViewActivity.EXTRA_URL, url);
+        Intent intent = new Intent(getContext(), FullScreenImageActivity.class);
+        intent.putExtra(FullScreenImageActivity.EXTRA_URL, url);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

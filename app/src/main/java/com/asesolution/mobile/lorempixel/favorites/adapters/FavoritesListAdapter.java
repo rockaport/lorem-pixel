@@ -1,9 +1,7 @@
 package com.asesolution.mobile.lorempixel.favorites.adapters;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,8 @@ import android.widget.TextView;
 import com.asesolution.mobile.lorempixel.R;
 import com.asesolution.mobile.lorempixel.data.LoremPixelUtil;
 import com.asesolution.mobile.lorempixel.favorites.interfaces.FavoritesContract;
-import com.asesolution.mobile.lorempixel.gallery.PaletteTransformation;
+import com.asesolution.mobile.lorempixel.utils.PaletteUtils;
+import com.asesolution.mobile.lorempixel.utils.picasso.PaletteTransformation;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -57,16 +56,9 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
                         // Taken from Jake's writeup on picasso + palette
                         // Use the bitmaps palette color to set the text background color
                         Bitmap bitmap = ((BitmapDrawable) holder.thumbnail.getDrawable()).getBitmap(); // Ew!
-                        Palette palette = PaletteTransformation.getPalette(bitmap);
-
-                        int color = palette.getDarkVibrantColor(Color.parseColor("#757575"));
-
-                        // Add some transparency. This kind of sucks and it's a little cleaner/faster
-                        // to just use bitwise operations, but I'm going for a readability here
-                        int newColor = Color.argb(255 * 2 / 3, Color.red(color), Color.green(color), Color.blue(color));
 
                         // Finally update the background color
-                        holder.category.setBackgroundColor(newColor);
+                        holder.category.setBackgroundColor(PaletteUtils.getPaletteColor(bitmap));
                     }
                 });
 

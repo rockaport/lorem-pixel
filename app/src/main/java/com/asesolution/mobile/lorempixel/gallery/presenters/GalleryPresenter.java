@@ -7,8 +7,6 @@ import com.asesolution.mobile.lorempixel.data.FavoritesRepository;
 import com.asesolution.mobile.lorempixel.data.ImagesRepository;
 import com.asesolution.mobile.lorempixel.gallery.interfaces.GalleryContract;
 
-import java.util.ArrayList;
-
 public class GalleryPresenter implements GalleryContract.UserAction {
     private static final String TAG = "GalleryPresenter";
     private ImagesRepository imagesRepository;

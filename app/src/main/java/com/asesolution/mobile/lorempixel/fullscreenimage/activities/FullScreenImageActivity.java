@@ -1,36 +1,32 @@
-package com.asesolution.mobile.lorempixel.gallery.activities;
+package com.asesolution.mobile.lorempixel.fullscreenimage.activities;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.asesolution.mobile.lorempixel.R;
 import com.asesolution.mobile.lorempixel.data.LoremPixelRepository;
 import com.asesolution.mobile.lorempixel.data.LoremPixelUtil;
-import com.asesolution.mobile.lorempixel.gallery.PaletteTransformation;
+import com.asesolution.mobile.lorempixel.utils.PaletteUtils;
+import com.asesolution.mobile.lorempixel.utils.picasso.PaletteTransformation;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ImageViewActivity extends AppCompatActivity {
-    public static final String EXTRA_URL = ImageViewActivity.class.getCanonicalName() + "EXTRA_URL";
+public class FullScreenImageActivity extends AppCompatActivity {
+    public static final String EXTRA_URL = FullScreenImageActivity.class.getCanonicalName() + "EXTRA_URL";
 
     @Bind(R.id.image_view)
     ImageView imageView;
     @Bind(R.id.image_view_category)
     TextView category;
-    Animation fadeIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +34,6 @@ public class ImageViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_view);
 
         ButterKnife.bind(this);
-
-        // Initialize the animation
-        fadeIn = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
 
         // Get the window size
         DisplayMetrics metrics = new DisplayMetrics();
@@ -66,16 +59,9 @@ public class ImageViewActivity extends AppCompatActivity {
                         // Taken from Jake's writeup on picasso + palette
                         // Use the bitmaps palette color to set the text background color
                         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap(); // Ew!
-                        Palette palette = PaletteTransformation.getPalette(bitmap);
-
-                        int color = palette.getDarkVibrantColor(Color.parseColor("#757575"));
-
-                        // Add some transparency. This kind of sucks and it's a little cleaner/faster
-                        // to just use bitwise operations, but I'm going for a readability here
-                        int newColor = Color.argb(255 * 2 / 3, Color.red(color), Color.green(color), Color.blue(color));
 
                         // Finally update the background color
-                        category.setBackgroundColor(newColor);
+                        category.setBackgroundColor(PaletteUtils.getPaletteColor(bitmap));
                         category.setVisibility(View.VISIBLE);
                     }
                 });

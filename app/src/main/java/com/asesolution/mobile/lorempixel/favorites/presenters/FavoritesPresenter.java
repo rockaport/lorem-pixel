@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import com.asesolution.mobile.lorempixel.data.FavoritesRepository;
 import com.asesolution.mobile.lorempixel.favorites.interfaces.FavoritesContract;
 
-import java.util.ArrayList;
-
 public class FavoritesPresenter implements FavoritesContract.UserAction {
     FavoritesRepository favoritesRepository;
     FavoritesContract.View favoritesView;

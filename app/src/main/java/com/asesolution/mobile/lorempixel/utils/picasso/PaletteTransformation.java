@@ -1,4 +1,4 @@
-package com.asesolution.mobile.lorempixel.gallery;
+package com.asesolution.mobile.lorempixel.utils.picasso;
 
 import android.graphics.Bitmap;
 import android.support.v7.graphics.Palette;
