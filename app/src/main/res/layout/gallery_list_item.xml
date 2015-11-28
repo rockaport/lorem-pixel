@@ -13,14 +13,14 @@
         android:layout_width="@dimen/gallery_image_size"
         android:layout_height="@dimen/gallery_image_size"
         android:layout_centerInParent="true"
-        android:src="@color/md_black_1000"
-        android:background="?attr/selectableItemBackground" />
+        android:background="?attr/selectableItemBackground"
+        android:src="@color/md_black_1000" />
 
     <FrameLayout
-        android:layout_alignParentBottom="true"
         android:layout_width="@dimen/gallery_image_size"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/gallery_list_category"

@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.asesolution.mobile.lorempixel.favorites.fragments.FavoritesFragment;
 import com.asesolution.mobile.lorempixel.gallery.fragments.GalleryFragment;
 
 import java.util.ArrayList;
@@ -17,13 +18,18 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, FragmentContract.View {
+    private static final String TAG = "MainActivity";
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.tab_layout)
     TabLayout tabLayout;
     @Bind(R.id.view_pager)
     ViewPager viewPager;
+
+    Adapter adapter;
+
+    FragmentsPresenter userAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +39,40 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        Adapter adapter = new Adapter(getSupportFragmentManager());
+        // Create an adapter for the view pager
+        adapter = new Adapter(getSupportFragmentManager());
+
+        // Add fragments
         adapter.addFragment(new GalleryFragment(), "Gallery");
-        adapter.addFragment(new Fragment(), "Favorites");
+        adapter.addFragment(new FavoritesFragment(), "Favorites");
+
+        // Add the adapter to the viewpager
         viewPager.setAdapter(adapter);
 
+        // Add a change listener
+        viewPager.addOnPageChangeListener(this);
+
         tabLayout.setupWithViewPager(viewPager);
+
+        userAction = new FragmentsPresenter(this);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        userAction.switchFragment(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+    }
+
+    @Override
+    public void displayFragment(int position) {
+        ((FragmentContract.FragmentView) adapter.getItem(position)).displayFragment();
     }
 
     static class Adapter extends FragmentPagerAdapter {

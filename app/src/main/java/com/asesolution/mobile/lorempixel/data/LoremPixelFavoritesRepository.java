@@ -7,10 +7,9 @@ import java.util.ArrayList;
 public class LoremPixelFavoritesRepository implements FavoritesRepository {
     private static LoremPixelFavoritesRepository instance = null;
 
-    private ArrayList<String> favorites;
+    private static ArrayList<String> favorites = new ArrayList<>();
 
     private LoremPixelFavoritesRepository() {
-        favorites = new ArrayList<>();
     }
 
     public static LoremPixelFavoritesRepository getInstance() {

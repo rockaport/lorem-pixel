@@ -28,5 +28,4 @@ public class MainApplication extends Application {
             resources = getResources();
         }
     }
-
 }
