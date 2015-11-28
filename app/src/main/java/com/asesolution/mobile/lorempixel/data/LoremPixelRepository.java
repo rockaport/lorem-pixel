@@ -61,20 +61,12 @@ public class LoremPixelRepository implements ImagesRepository {
         return urls;
     }
 
-    public static ArrayList<String> getShuffledUrls(int size) {
-        return getShuffledUrls(size, size);
-    }
-
-    public static String parseCategory(String url) {
-        return url.split("/")[5];
-    }
-
-    public static String parseNumber(String url) {
-        return url.split("/")[6];
+    public static ArrayList<String> getShuffledUrls(int imageSize) {
+        return getShuffledUrls(imageSize, imageSize);
     }
 
     @Override
-    public void getImageUrls(int size, @NonNull LoadImagesCallback callback) {
-        callback.onImagesLoaded(getShuffledUrls(size));
+    public void getImageUrls(int imageSize, @NonNull LoadImagesCallback callback) {
+        callback.onImagesLoaded(getShuffledUrls(imageSize));
     }
 }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.asesolution.mobile.lorempixel.R;
 import com.asesolution.mobile.lorempixel.data.LoremPixelRepository;
+import com.asesolution.mobile.lorempixel.data.LoremPixelUtil;
 import com.asesolution.mobile.lorempixel.gallery.PaletteTransformation;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -49,8 +50,8 @@ public class ImageViewActivity extends AppCompatActivity {
         String inputUrl = getIntent().getStringExtra(EXTRA_URL);
 
         // Process the category and number
-        String urlCategory = LoremPixelRepository.parseCategory(inputUrl);
-        int number = Integer.parseInt(LoremPixelRepository.parseNumber(inputUrl));
+        String urlCategory = LoremPixelUtil.parseCategory(inputUrl);
+        int number = Integer.parseInt(LoremPixelUtil.parseNumber(inputUrl));
 
         // Get the actual url with correct 16:9 aspect ratio size
         String url = LoremPixelRepository.getImageUrl(metrics.widthPixels, metrics.widthPixels * 9 / 16, urlCategory, number);

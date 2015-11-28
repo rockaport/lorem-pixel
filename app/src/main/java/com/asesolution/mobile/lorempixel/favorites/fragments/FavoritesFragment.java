@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.asesolution.mobile.lorempixel.FragmentContract;
 import com.asesolution.mobile.lorempixel.Injection;
@@ -29,6 +31,10 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
     private static final String TAG = "FavoritesFragment";
     @Bind(R.id.favorites_list)
     RecyclerView recyclerView;
+    @Bind(R.id.favorites_list_progress)
+    ProgressBar progressBar;
+    @Bind(R.id.favorites_list_empty)
+    ImageView emptyIcon;
 
     FavoritesPresenter actionListener;
 
@@ -79,6 +85,11 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
 
     @Override
     public void displayProgressIndicator(boolean active) {
+        if (active) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -91,11 +102,16 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
 
     @Override
     public void showFavorites(ArrayList<String> favorites) {
-        FavoritesListAdapter favoritesListAdapter = new FavoritesListAdapter(actionListener, imageSize, favorites);
-        recyclerView.setAdapter(favoritesListAdapter);
+        if (favorites.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyIcon.setVisibility(View.VISIBLE);
+        } else {
+            emptyIcon.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
 
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new GalleryItemTouchHelperCallback(galleryListAdapter));
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
+            FavoritesListAdapter favoritesListAdapter = new FavoritesListAdapter(actionListener, imageSize, favorites);
+            recyclerView.setAdapter(favoritesListAdapter);
+        }
     }
 
     @Override

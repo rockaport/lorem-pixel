@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.asesolution.mobile.lorempixel.R;
-import com.asesolution.mobile.lorempixel.data.LoremPixelRepository;
+import com.asesolution.mobile.lorempixel.data.LoremPixelUtil;
 import com.asesolution.mobile.lorempixel.gallery.PaletteTransformation;
 import com.asesolution.mobile.lorempixel.gallery.interfaces.GalleryContract;
 import com.squareup.picasso.Callback;
@@ -49,8 +49,7 @@ public class GalleryListAdapter extends RecyclerView.Adapter<GalleryListAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // Get the URL and parse the category from it
-        final String url = urls.get(position);
-        String category = LoremPixelRepository.parseCategory(url);
+        String url = urls.get(position);
 
         // Load the image view from the url
         Picasso.with(holder.thumbnail.getContext())
@@ -76,7 +75,7 @@ public class GalleryListAdapter extends RecyclerView.Adapter<GalleryListAdapter.
                 });
 
         // Update the category text
-        holder.category.setText(category);
+        holder.category.setText(LoremPixelUtil.parseCategory(url));
 
         holder.thumbnail.setOnClickListener(v -> userAction.showFullScreenImage(urls.get(position)));
 

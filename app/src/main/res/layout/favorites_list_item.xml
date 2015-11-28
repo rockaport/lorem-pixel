@@ -18,10 +18,10 @@
 
     <TextView
         android:id="@+id/favorites_list_category"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/gallery_image_size"
         android:layout_height="32dp"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom|start"
+        android:layout_centerHorizontal="true"
         android:background="@color/md_grey_600"
         android:gravity="center_vertical"
         android:paddingStart="4dp"

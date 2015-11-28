@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.asesolution.mobile.lorempixel.R;
-import com.asesolution.mobile.lorempixel.data.LoremPixelRepository;
+import com.asesolution.mobile.lorempixel.data.LoremPixelUtil;
 import com.asesolution.mobile.lorempixel.favorites.interfaces.FavoritesContract;
 import com.asesolution.mobile.lorempixel.gallery.PaletteTransformation;
 import com.squareup.picasso.Callback;
@@ -45,8 +45,7 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // Get the URL and parse the category from it
-        final String url = favorites.get(position);
-        String category = LoremPixelRepository.parseCategory(url);
+        String url = favorites.get(position);
 
         // Load the image view from the url
         Picasso.with(holder.thumbnail.getContext())
@@ -72,7 +71,7 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
                 });
 
         // Update the category text
-        holder.category.setText(category);
+        holder.category.setText(LoremPixelUtil.parseCategory(url));
 
         holder.thumbnail.setOnClickListener(v -> userAction.showFullScreenImage(favorites.get(position)));
     }
