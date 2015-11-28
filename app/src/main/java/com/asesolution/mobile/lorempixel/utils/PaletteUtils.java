@@ -3,10 +3,12 @@ package com.asesolution.mobile.lorempixel.utils;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import com.asesolution.mobile.lorempixel.MainApplication;
+import com.asesolution.mobile.lorempixel.R;
 import com.asesolution.mobile.lorempixel.utils.picasso.PaletteTransformation;
 
 public class PaletteUtils {
-    private static final int DEFAULT_COLOR = Color.parseColor("#757575");
+    private static final int DEFAULT_COLOR = MainApplication.getStaticResources().getColor(R.color.md_grey_600, null);
     private static final int DEFAULT_ALPHA = 170; // 255 * 2 / 3
 
     public static int getPaletteColor(Bitmap bitmap) {
