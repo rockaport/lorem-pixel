@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.ProgressBar;
 import com.asesolution.mobile.lorempixel.FragmentContract;
 import com.asesolution.mobile.lorempixel.Injection;
 import com.asesolution.mobile.lorempixel.R;
+import com.asesolution.mobile.lorempixel.decorators.PaddingItemDecoration;
 import com.asesolution.mobile.lorempixel.favorites.adapters.FavoritesListAdapter;
 import com.asesolution.mobile.lorempixel.favorites.interfaces.FavoritesContract;
 import com.asesolution.mobile.lorempixel.favorites.presenters.FavoritesPresenter;
@@ -40,27 +40,20 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
 
     int imageSize;
     int spanCount;
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        Log.d(TAG, "onDestroy: ");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop: ");
-    }
+    int padding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int width = getResources().getDisplayMetrics().widthPixels;
+        // Obtain the image size dimension
         imageSize = getResources().getDimensionPixelSize(R.dimen.gallery_image_size);
-        spanCount = width / imageSize;
+
+        // Calculate the number of spans (columns) and the optimal padding for an evenly spaced grid
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        spanCount = screenWidth / imageSize;
+        int extraSpace = screenWidth - spanCount * imageSize;
+        padding = extraSpace / (spanCount + 1);
     }
 
     @Nullable
@@ -71,6 +64,7 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
         ButterKnife.bind(this, view);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
+        recyclerView.addItemDecoration(new PaddingItemDecoration(padding, spanCount));
 
         return view;
     }

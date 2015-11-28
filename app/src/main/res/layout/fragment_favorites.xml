@@ -15,11 +15,11 @@
         tools:visibility="visible" />
 
     <ProgressBar
-        tools:visibility="gone"
         android:id="@+id/favorites_list_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        tools:visibility="gone" />
 
     <ImageView
         android:id="@+id/favorites_list_empty"

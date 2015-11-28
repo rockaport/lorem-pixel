@@ -5,7 +5,6 @@
     android:id="@+id/favorites_list_container"
     android:layout_width="@dimen/gallery_image_size"
     android:layout_height="match_parent"
-    android:layout_margin="4dp"
     tools:showIn="@layout/fragment_favorites">
 
     <ImageButton
@@ -14,7 +13,7 @@
         android:layout_height="@dimen/gallery_image_size"
         android:layout_centerInParent="true"
         android:background="?attr/selectableItemBackground"
-        android:src="@color/md_black_1000" />
+        tools:src="@color/md_black_1000" />
 
     <TextView
         android:id="@+id/favorites_list_category"

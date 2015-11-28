@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import com.asesolution.mobile.lorempixel.FragmentContract;
 import com.asesolution.mobile.lorempixel.Injection;
 import com.asesolution.mobile.lorempixel.R;
+import com.asesolution.mobile.lorempixel.decorators.PaddingItemDecoration;
 import com.asesolution.mobile.lorempixel.fullscreenimage.activities.FullScreenImageActivity;
 import com.asesolution.mobile.lorempixel.gallery.adapters.GalleryListAdapter;
 import com.asesolution.mobile.lorempixel.gallery.callbacks.GalleryItemTouchHelperCallback;
@@ -28,6 +29,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class GalleryFragment extends Fragment implements GalleryContract.View, FragmentContract.FragmentView {
+    private static final String TAG = "GalleryFragment";
     @Bind(R.id.gallery_list)
     RecyclerView recyclerView;
     @Bind(R.id.gallery_list_progress)
@@ -37,14 +39,20 @@ public class GalleryFragment extends Fragment implements GalleryContract.View, F
 
     int imageSize;
     int spanCount;
+    int padding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int width = getResources().getDisplayMetrics().widthPixels;
+        // Obtain the image size dimension
         imageSize = getResources().getDimensionPixelSize(R.dimen.gallery_image_size);
-        spanCount = width / imageSize;
+
+        // Calculate the number of spans (columns) and the optimal padding for an evenly spaced grid
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        spanCount = screenWidth / imageSize;
+        int extraSpace = screenWidth - spanCount * imageSize;
+        padding = extraSpace / (spanCount + 1);
     }
 
     @Nullable
@@ -55,6 +63,7 @@ public class GalleryFragment extends Fragment implements GalleryContract.View, F
         ButterKnife.bind(this, view);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
+        recyclerView.addItemDecoration(new PaddingItemDecoration(padding, spanCount));
 
         return view;
     }
@@ -99,4 +108,5 @@ public class GalleryFragment extends Fragment implements GalleryContract.View, F
     public void displayFragment() {
         // Do nothing
     }
+
 }
