@@ -33,12 +33,9 @@ public class GalleryPresenter implements GalleryContract.UserAction {
     public void loadGallery(int size) {
         galleryView.displayProgressIndicator(true);
 
-        imagesRepository.getImageUrls(size, new ImagesRepository.LoadImagesCallback() {
-            @Override
-            public void onImagesLoaded(ArrayList<String> urls) {
-                galleryView.displayProgressIndicator(false);
-                galleryView.showGallery(urls);
-            }
+        imagesRepository.getImageUrls(size, urls -> {
+            galleryView.displayProgressIndicator(false);
+            galleryView.showGallery(urls);
         });
     }
 
@@ -51,5 +48,6 @@ public class GalleryPresenter implements GalleryContract.UserAction {
     @Override
     public void removeFromFavorites(@NonNull String url) {
         favoritesRepository.remove(url);
+        Log.d(TAG, "removeFromFavorites: " + favoritesRepository.getFavorites().toString());
     }
 }
