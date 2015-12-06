@@ -8,7 +8,7 @@ public interface GalleryContract {
     interface View {
         void displayProgressIndicator(boolean active);
 
-        void showFullScreenImageUi(@NonNull String url);
+        void showFullScreenImageUi(@NonNull android.view.View view, @NonNull String url);
 
         void showGallery(ArrayList<String> urls);
 
@@ -16,7 +16,7 @@ public interface GalleryContract {
     }
 
     interface UserAction {
-        void showFullScreenImage(@NonNull String url);
+        void showFullScreenImage(@NonNull android.view.View view, @NonNull String url);
 
         void loadGallery(int size);
 

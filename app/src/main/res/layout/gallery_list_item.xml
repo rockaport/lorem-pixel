@@ -12,6 +12,7 @@
         android:layout_width="@dimen/gallery_image_size"
         android:layout_height="@dimen/gallery_image_size"
         android:layout_centerInParent="true"
+        android:transitionName="thumbnail"
         android:background="?attr/selectableItemBackground"
         tools:src="@color/md_black_1000" />
 

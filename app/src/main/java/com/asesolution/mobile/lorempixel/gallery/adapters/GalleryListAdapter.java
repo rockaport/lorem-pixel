@@ -67,7 +67,7 @@ public class GalleryListAdapter extends RecyclerView.Adapter<GalleryListAdapter.
         // Update the category text
         holder.category.setText(LoremPixelUtil.parseCategory(url));
 
-        holder.thumbnail.setOnClickListener(v -> userAction.showFullScreenImage(urls.get(position)));
+        holder.thumbnail.setOnClickListener(v -> userAction.showFullScreenImage(v, urls.get(position)));
 
         // Clear the listener since we'll be manually setting the checked state and that will fire
         // the listener

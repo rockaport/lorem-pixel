@@ -1,14 +1,13 @@
 package com.asesolution.mobile.lorempixel.gallery.presenters;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.view.View;
 
 import com.asesolution.mobile.lorempixel.data.FavoritesRepository;
 import com.asesolution.mobile.lorempixel.data.ImagesRepository;
 import com.asesolution.mobile.lorempixel.gallery.interfaces.GalleryContract;
 
 public class GalleryPresenter implements GalleryContract.UserAction {
-    private static final String TAG = "GalleryPresenter";
     private ImagesRepository imagesRepository;
     private FavoritesRepository favoritesRepository;
     private GalleryContract.View galleryView;
@@ -23,8 +22,8 @@ public class GalleryPresenter implements GalleryContract.UserAction {
     }
 
     @Override
-    public void showFullScreenImage(@NonNull String url) {
-        galleryView.showFullScreenImageUi(url);
+    public void showFullScreenImage(@NonNull View view, @NonNull String url) {
+        galleryView.showFullScreenImageUi(view, url);
     }
 
     @Override
@@ -50,13 +49,11 @@ public class GalleryPresenter implements GalleryContract.UserAction {
     @Override
     public void addToFavorites(@NonNull String url) {
         favoritesRepository.add(url);
-        Log.d(TAG, "addToFavorites: " + favoritesRepository.getFavorites().toString());
     }
 
     @Override
     public void removeFromFavorites(@NonNull String url) {
         favoritesRepository.remove(url);
-        Log.d(TAG, "removeFromFavorites: " + favoritesRepository.getFavorites().toString());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.asesolution.mobile.lorempixel.gallery.fragments;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -96,11 +97,15 @@ public class GalleryFragment extends Fragment implements GalleryContract.View, F
     }
 
     @Override
-    public void showFullScreenImageUi(@NonNull String url) {
+    public void showFullScreenImageUi(@NonNull View view, @NonNull String url) {
         Intent intent = new Intent(getContext(), FullScreenImageActivity.class);
         intent.putExtra(FullScreenImageActivity.EXTRA_URL, url);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        // of both activities are defined with android:transitionName="robot"
+        ActivityOptions options = ActivityOptions
+                .makeSceneTransitionAnimation(getActivity(), view, "thumbnail");
+
+        getActivity().startActivity(intent, options.toBundle());
     }
 
     @Override
