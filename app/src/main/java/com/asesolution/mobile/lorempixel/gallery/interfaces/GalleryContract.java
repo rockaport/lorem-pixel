@@ -11,6 +11,8 @@ public interface GalleryContract {
         void showFullScreenImageUi(@NonNull String url);
 
         void showGallery(ArrayList<String> urls);
+
+        void displayCategoriesList();
     }
 
     interface UserAction {
@@ -18,8 +20,12 @@ public interface GalleryContract {
 
         void loadGallery(int size);
 
+        void loadGallery(int size, @NonNull String category);
+
         void addToFavorites(@NonNull String url);
 
         void removeFromFavorites(@NonNull String url);
+
+        void showCategoriesList();
     }
 }

@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
-    private int padding;
-    private int spanCount;
+    int padding;
+    int spanCount;
 
     public PaddingItemDecoration(int padding, int spanCount) {
         this.padding = padding;
@@ -38,11 +38,11 @@ public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    private boolean isFirstColumn(int position) {
+    boolean isFirstColumn(int position) {
         return position % spanCount == 0;
     }
 
-    private boolean isLastColumn(int position) {
+    boolean isLastColumn(int position) {
         return position % spanCount == spanCount - 1;
     }
 }

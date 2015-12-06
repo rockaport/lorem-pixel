@@ -1,6 +1,7 @@
 package com.asesolution.mobile.lorempixel.data;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,21 +39,32 @@ public class LoremPixelRepository implements ImagesRepository {
         return String.format(LOREM_URL + "/%d/%d/%s/%d", width, height, category, number);
     }
 
-    public static String getRandomImageUrl(int width, int height, String category) {
-        return getImageUrl(width, height, category, getRandomNumber());
+    boolean isValidCategory(String category) {
+        for (String c : categories) {
+            if (c.equals(category)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public static String getRandomImageUrl(int width, int height) {
-        return getImageUrl(width, height, getRandomCategory(), getRandomNumber());
-    }
+    ArrayList<String> getShuffledUrls(int width, int height, String category) {
+        ArrayList<String> urls;
+        if (TextUtils.isEmpty(category) || !isValidCategory(category)) {
+            urls = new ArrayList<>(categories.length * MAX_PER_CATEGORY);
 
-    public static ArrayList<String> getShuffledUrls(int width, int height) {
-        ArrayList<String> urls = new ArrayList<>(categories.length * MAX_PER_CATEGORY);
+            int index = 0;
+            for (String cat : categories) {
+                for (int i = 0; i < MAX_PER_CATEGORY; i++) {
+                    urls.add(index++, getImageUrl(width, height, cat, i));
+                }
+            }
+        } else {
+            urls = new ArrayList<>(MAX_PER_CATEGORY);
 
-        int index = 0;
-        for (String category : categories) {
             for (int i = 0; i < MAX_PER_CATEGORY; i++) {
-                urls.add(index++, getImageUrl(width, height, category, i));
+                urls.add(i, getImageUrl(width, height, category, i));
             }
         }
 
@@ -61,12 +73,21 @@ public class LoremPixelRepository implements ImagesRepository {
         return urls;
     }
 
-    public static ArrayList<String> getShuffledUrls(int imageSize) {
-        return getShuffledUrls(imageSize, imageSize);
+    ArrayList<String> getShuffledUrls(int imageSize) {
+        return getShuffledUrls(imageSize, imageSize, null);
+    }
+
+    ArrayList<String> getShuffledUrls(int imageSize, String category) {
+        return getShuffledUrls(imageSize, imageSize, category);
     }
 
     @Override
     public void getImageUrls(int imageSize, @NonNull LoadImagesCallback callback) {
         callback.onImagesLoaded(getShuffledUrls(imageSize));
+    }
+
+    @Override
+    public void getImageUrls(int imageSize, @NonNull String category, @NonNull LoadImagesCallback callback) {
+        callback.onImagesLoaded(getShuffledUrls(imageSize, category));
     }
 }
