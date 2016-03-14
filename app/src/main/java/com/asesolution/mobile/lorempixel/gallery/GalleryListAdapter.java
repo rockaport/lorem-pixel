@@ -1,4 +1,4 @@
-package com.asesolution.mobile.lorempixel.favorites.adapters;
+package com.asesolution.mobile.lorempixel.gallery;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -7,13 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.asesolution.mobile.lorempixel.R;
+import com.asesolution.mobile.lorempixel.data.FavoritesRepository;
 import com.asesolution.mobile.lorempixel.data.LoremPixelUtil;
-import com.asesolution.mobile.lorempixel.favorites.interfaces.FavoritesContract;
 import com.asesolution.mobile.lorempixel.utils.PaletteUtils;
 import com.asesolution.mobile.lorempixel.utils.picasso.PaletteTransformation;
 import com.squareup.picasso.Callback;
@@ -24,27 +25,33 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdapter.ViewHolder> {
-    int imageSize;
-    ArrayList<String> favorites;
-    FavoritesContract.UserAction userAction;
+public class GalleryListAdapter extends RecyclerView.Adapter<GalleryListAdapter.ViewHolder> {
+    ArrayList<String> urls;
+    GalleryContract.UserAction userAction;
+    FavoritesRepository favoritesRepository;
 
-    public FavoritesListAdapter(FavoritesContract.UserAction userAction, int imageSize, ArrayList<String> favorites) {
+
+    public GalleryListAdapter(GalleryContract.UserAction userAction, ArrayList<String> urls, FavoritesRepository favoritesRepository) {
         this.userAction = userAction;
-        this.imageSize = imageSize;
-        this.favorites = favorites;
+        this.urls = urls;
+        this.favoritesRepository = favoritesRepository;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.favorites_list_item, parent, false);
-        return new ViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_list_item, parent, false);
+
+        ViewHolder holder = new ViewHolder(view);
+
+        holder.thumbnail.setOnClickListener(v -> userAction.showFullScreenImage(urls.get(holder.getAdapterPosition())));
+
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // Get the URL and parse the category from it
-        String url = favorites.get(position);
+        String url = urls.get(position);
 
         // Load the image view from the url
         Picasso.with(holder.thumbnail.getContext())
@@ -65,12 +72,32 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
         // Update the category text
         holder.category.setText(LoremPixelUtil.parseCategory(url));
 
-        holder.thumbnail.setOnClickListener(v -> userAction.showFullScreenImage(favorites.get(position)));
+        // Clear the listener since we'll be manually setting the checked state and that will fire
+        // the listener
+        holder.favorite.setOnCheckedChangeListener(null);
+
+        // Synchronize the state of the favorite button
+        if (favoritesRepository.contains(url)) {
+            holder.favorite.setChecked(true);
+        } else {
+            holder.favorite.setChecked(false);
+        }
+
+        // Add a checked change listener for the favorite button
+        holder.favorite.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            int adapterPosition = holder.getAdapterPosition();
+
+            if (isChecked) {
+                userAction.addToFavorites(urls.get(adapterPosition));
+            } else {
+                userAction.removeFromFavorites(urls.get(adapterPosition));
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return favorites.size();
+        return urls.size();
     }
 
     @Override
@@ -86,17 +113,19 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
     }
 
     public void remove(int adapterPosition) {
-        favorites.remove(adapterPosition);
+        urls.remove(adapterPosition);
         notifyItemRemoved(adapterPosition);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.favorites_list_container)
+        @Bind(R.id.gallery_list_container)
         RelativeLayout container;
-        @Bind(R.id.favorites_list_thumbnail)
+        @Bind(R.id.gallery_list_thumbnail)
         ImageButton thumbnail;
-        @Bind(R.id.favorites_list_category)
+        @Bind(R.id.gallery_list_category)
         TextView category;
+        @Bind(R.id.gallery_list_favorite)
+        CheckBox favorite;
 
         public ViewHolder(View view) {
             super(view);

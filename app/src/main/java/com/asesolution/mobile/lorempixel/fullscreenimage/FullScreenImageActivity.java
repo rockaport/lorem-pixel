@@ -1,4 +1,4 @@
-package com.asesolution.mobile.lorempixel.fullscreenimage.activities;
+package com.asesolution.mobile.lorempixel.fullscreenimage;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;

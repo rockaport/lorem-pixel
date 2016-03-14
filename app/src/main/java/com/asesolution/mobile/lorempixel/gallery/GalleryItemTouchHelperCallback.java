@@ -1,9 +1,7 @@
-package com.asesolution.mobile.lorempixel.gallery.callbacks;
+package com.asesolution.mobile.lorempixel.gallery;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-
-import com.asesolution.mobile.lorempixel.gallery.adapters.GalleryListAdapter;
 
 
 public class GalleryItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {

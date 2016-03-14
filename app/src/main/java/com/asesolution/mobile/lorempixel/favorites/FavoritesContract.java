@@ -1,4 +1,4 @@
-package com.asesolution.mobile.lorempixel.favorites.interfaces;
+package com.asesolution.mobile.lorempixel.favorites;
 
 import android.support.annotation.NonNull;
 
@@ -8,7 +8,7 @@ public interface FavoritesContract {
     interface View {
         void displayProgressIndicator(boolean active);
 
-        void showFullScreenImageUi(@NonNull String url);
+        void displayFullScreenImage(@NonNull String url);
 
         void showFavorites(ArrayList<String> urls);
     }

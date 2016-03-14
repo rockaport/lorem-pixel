@@ -1,4 +1,4 @@
-package com.asesolution.mobile.lorempixel.favorites.fragments;
+package com.asesolution.mobile.lorempixel.favorites;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +17,16 @@ import com.asesolution.mobile.lorempixel.FragmentContract;
 import com.asesolution.mobile.lorempixel.Injection;
 import com.asesolution.mobile.lorempixel.R;
 import com.asesolution.mobile.lorempixel.decorators.PaddingItemDecoration;
-import com.asesolution.mobile.lorempixel.favorites.adapters.FavoritesListAdapter;
-import com.asesolution.mobile.lorempixel.favorites.interfaces.FavoritesContract;
-import com.asesolution.mobile.lorempixel.favorites.presenters.FavoritesPresenter;
-import com.asesolution.mobile.lorempixel.fullscreenimage.activities.FullScreenImageActivity;
+import com.asesolution.mobile.lorempixel.fullscreenimage.FullScreenImageActivity;
+import com.asesolution.mobile.lorempixel.utils.ViewUtil;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class FavoritesFragment extends Fragment implements FavoritesContract.View, FragmentContract.FragmentView {
-    private static final String TAG = "FavoritesFragment";
     @Bind(R.id.favorites_list)
     RecyclerView recyclerView;
     @Bind(R.id.favorites_list_progress)
@@ -46,6 +43,7 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.d("onCreate %s", this);
 
         // Obtain the image size dimension
         imageSize = getResources().getDimensionPixelSize(R.dimen.gallery_image_size);
@@ -60,6 +58,8 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Timber.d("onCreateView %s", this);
+
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
 
         ButterKnife.bind(this, view);
@@ -73,56 +73,73 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Timber.d("onActivityCreated %s", this);
 
-        actionListener = new FavoritesPresenter(Injection.provideFavoritesRepository(), this);
+        actionListener = new FavoritesPresenter(this, Injection.provideFavoritesRepository());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Timber.d("onResume %s", this);
         actionListener.loadFavorites(imageSize);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: ");
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Timber.d("onHiddenChanged");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop: ");
+        Timber.d("onStop %s", this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Timber.d("onDestroy %s", this);
     }
 
     @Override
     public void displayProgressIndicator(boolean active) {
         if (active) {
-            progressBar.setVisibility(View.VISIBLE);
+            ViewUtil.animateOut(recyclerView);
+            ViewUtil.animateIn(progressBar);
         } else {
-            progressBar.setVisibility(View.GONE);
+            ViewUtil.animateOut(progressBar);
+            ViewUtil.animateIn(recyclerView);
         }
     }
 
     @Override
-    public void showFullScreenImageUi(@NonNull String url) {
+    public void displayFullScreenImage(@NonNull String url) {
         Intent intent = new Intent(getContext(), FullScreenImageActivity.class);
+
         intent.putExtra(FullScreenImageActivity.EXTRA_URL, url);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         startActivity(intent);
     }
 
     @Override
     public void showFavorites(ArrayList<String> favorites) {
         if (favorites.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyIcon.setVisibility(View.VISIBLE);
+            ViewUtil.animateOut(recyclerView);
+            ViewUtil.animateIn(emptyIcon);
         } else {
-            emptyIcon.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.setAdapter(new FavoritesListAdapter(actionListener, imageSize, favorites));
 
-            FavoritesListAdapter favoritesListAdapter = new FavoritesListAdapter(actionListener, imageSize, favorites);
-            recyclerView.setAdapter(favoritesListAdapter);
+            ViewUtil.animateOut(emptyIcon);
+            ViewUtil.animateIn(recyclerView);
         }
     }
 
     @Override
     public void displayFragment() {
+        Timber.d("displayFragment %s", this);
         actionListener.loadFavorites(imageSize);
     }
 }

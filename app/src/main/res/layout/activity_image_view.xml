@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/md_black_1000"
-    tools:context=".fullscreenimage.activities.FullScreenImageActivity">
+    tools:context=".fullscreenimage.FullScreenImageActivity">
 
     <ImageView
         android:id="@+id/image_view"

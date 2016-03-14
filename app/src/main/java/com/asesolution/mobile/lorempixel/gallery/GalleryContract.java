@@ -1,4 +1,4 @@
-package com.asesolution.mobile.lorempixel.gallery.interfaces;
+package com.asesolution.mobile.lorempixel.gallery;
 
 import android.support.annotation.NonNull;
 
@@ -8,7 +8,7 @@ public interface GalleryContract {
     interface View {
         void displayProgressIndicator(boolean active);
 
-        void showFullScreenImageUi(@NonNull String url);
+        void displayFullScreenImage(@NonNull String url);
 
         void showGallery(ArrayList<String> urls);
 

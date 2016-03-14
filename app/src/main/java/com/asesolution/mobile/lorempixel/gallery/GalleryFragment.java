@@ -1,4 +1,4 @@
-package com.asesolution.mobile.lorempixel.gallery.fragments;
+package com.asesolution.mobile.lorempixel.gallery;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,17 +20,15 @@ import com.asesolution.mobile.lorempixel.Injection;
 import com.asesolution.mobile.lorempixel.R;
 import com.asesolution.mobile.lorempixel.data.LoremPixelRepository;
 import com.asesolution.mobile.lorempixel.decorators.PaddingItemDecoration;
-import com.asesolution.mobile.lorempixel.fullscreenimage.activities.FullScreenImageActivity;
-import com.asesolution.mobile.lorempixel.gallery.adapters.GalleryListAdapter;
-import com.asesolution.mobile.lorempixel.gallery.callbacks.GalleryItemTouchHelperCallback;
-import com.asesolution.mobile.lorempixel.gallery.interfaces.GalleryContract;
+import com.asesolution.mobile.lorempixel.fullscreenimage.FullScreenImageActivity;
 import com.asesolution.mobile.lorempixel.gallery.listeners.RvScrollListenerVisibilityToggle;
-import com.asesolution.mobile.lorempixel.gallery.presenters.GalleryPresenter;
+import com.asesolution.mobile.lorempixel.utils.ViewUtil;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class GalleryFragment extends Fragment implements GalleryContract.View, FragmentContract.FragmentView {
     @Bind(R.id.gallery_list)
@@ -50,6 +48,8 @@ public class GalleryFragment extends Fragment implements GalleryContract.View, F
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Timber.d("onCreate");
+
         // Obtain the image size dimension
         imageSize = getResources().getDimensionPixelSize(R.dimen.gallery_image_size);
 
@@ -63,6 +63,8 @@ public class GalleryFragment extends Fragment implements GalleryContract.View, F
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Timber.d("onCreateView");
+
         View view = inflater.inflate(R.layout.fragment_gallery, container, false);
 
         ButterKnife.bind(this, view);
@@ -80,32 +82,48 @@ public class GalleryFragment extends Fragment implements GalleryContract.View, F
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        actionListener = new GalleryPresenter(Injection.provideImagesRepository(), Injection.provideFavoritesRepository(), this);
+        Timber.d("onActivityCreated");
+
+        actionListener = new GalleryPresenter(this, Injection.provideImagesRepository(), Injection.provideFavoritesRepository());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
         actionListener.loadGallery(imageSize);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Timber.d("onHiddenChanged");
     }
 
     @Override
     public void displayProgressIndicator(boolean active) {
         if (active) {
-            recyclerView.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
+            ViewUtil.animateOut(recyclerView);
+            ViewUtil.animateIn(progressBar);
         } else {
-            progressBar.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            ViewUtil.animateOut(progressBar);
+            ViewUtil.animateIn(recyclerView);
         }
     }
 
     @Override
-    public void showFullScreenImageUi(@NonNull String url) {
+    public void displayFullScreenImage(@NonNull String url) {
         Intent intent = new Intent(getContext(), FullScreenImageActivity.class);
+
         intent.putExtra(FullScreenImageActivity.EXTRA_URL, url);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         startActivity(intent);
     }
 
     @Override
     public void showGallery(ArrayList<String> urls) {
-        GalleryListAdapter galleryListAdapter = new GalleryListAdapter(actionListener, urls, Injection.provideFavoritesRepository().getFavorites());
+        GalleryListAdapter galleryListAdapter = new GalleryListAdapter(actionListener, urls, Injection.provideFavoritesRepository());
         recyclerView.swapAdapter(galleryListAdapter, false);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new GalleryItemTouchHelperCallback(galleryListAdapter));

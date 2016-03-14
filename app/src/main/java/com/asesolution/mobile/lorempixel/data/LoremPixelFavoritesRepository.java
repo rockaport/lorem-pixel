@@ -4,6 +4,9 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
+import rx.Observable;
+import rx.schedulers.Schedulers;
+
 public class LoremPixelFavoritesRepository implements FavoritesRepository {
     private static LoremPixelFavoritesRepository instance = null;
 
@@ -21,8 +24,8 @@ public class LoremPixelFavoritesRepository implements FavoritesRepository {
     }
 
     @Override
-    public ArrayList<String> getFavorites() {
-        return favorites;
+    public Observable<ArrayList<String>> getFavorites() {
+        return Observable.just(favorites).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -33,5 +36,10 @@ public class LoremPixelFavoritesRepository implements FavoritesRepository {
     @Override
     public void remove(@NonNull String url) {
         favorites.remove(url);
+    }
+
+    @Override
+    public boolean contains(@NonNull String url) {
+        return favorites.contains(url);
     }
 }

@@ -4,6 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.asesolution.mobile.lorempixel.logging.TimberReleaseTree;
+
+import timber.log.Timber;
+
 public class MainApplication extends Application {
     private static Context context;
     private static Resources resources;
@@ -26,6 +30,13 @@ public class MainApplication extends Application {
 
         if (resources == null) {
             resources = getResources();
+        }
+
+        // Plant the right timber tree
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        } else {
+            Timber.plant(new TimberReleaseTree());
         }
     }
 }

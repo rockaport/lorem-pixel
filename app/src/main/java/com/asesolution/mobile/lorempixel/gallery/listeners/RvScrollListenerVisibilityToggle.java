@@ -3,6 +3,8 @@ package com.asesolution.mobile.lorempixel.gallery.listeners;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.asesolution.mobile.lorempixel.utils.ViewUtil;
+
 public class RvScrollListenerVisibilityToggle extends RecyclerView.OnScrollListener {
     boolean scrollingDown = false;
     boolean isViewVisible = true;
@@ -26,12 +28,12 @@ public class RvScrollListenerVisibilityToggle extends RecyclerView.OnScrollListe
         if (scrollingDown) {
             if (isViewVisible) {
                 isViewVisible = false;
-                view.animate().scaleX(0f).scaleY(0f).start();
+                ViewUtil.animateOut(view);
             }
         } else {
             if (!isViewVisible) {
                 isViewVisible = true;
-                view.animate().scaleX(1f).scaleY(1f).start();
+                ViewUtil.animateIn(view);
             }
         }
     }

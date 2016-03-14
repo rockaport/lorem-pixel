@@ -5,7 +5,11 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Random;
+
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 public class LoremPixelRepository implements ImagesRepository {
     public static final String LOREM_URL = "http://lorempixel.com";
@@ -36,7 +40,7 @@ public class LoremPixelRepository implements ImagesRepository {
     }
 
     public static String getImageUrl(int width, int height, String category, int number) {
-        return String.format(LOREM_URL + "/%d/%d/%s/%d", width, height, category, number);
+        return String.format(Locale.ENGLISH, LOREM_URL + "/%d/%d/%s/%d", width, height, category, number);
     }
 
     boolean isValidCategory(String category) {
@@ -82,12 +86,12 @@ public class LoremPixelRepository implements ImagesRepository {
     }
 
     @Override
-    public void getImageUrls(int imageSize, @NonNull LoadImagesCallback callback) {
-        callback.onImagesLoaded(getShuffledUrls(imageSize));
+    public Observable<ArrayList<String>> getImageUrls(int imageSize) {
+        return Observable.just(getShuffledUrls(imageSize)).subscribeOn(Schedulers.io());
     }
 
     @Override
-    public void getImageUrls(int imageSize, @NonNull String category, @NonNull LoadImagesCallback callback) {
-        callback.onImagesLoaded(getShuffledUrls(imageSize, category));
+    public Observable<ArrayList<String>> getImageUrls(int imageSize, @NonNull String category) {
+        return Observable.just(getShuffledUrls(imageSize, category)).subscribeOn(Schedulers.io());
     }
 }

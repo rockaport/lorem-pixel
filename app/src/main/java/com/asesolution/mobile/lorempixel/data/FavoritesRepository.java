@@ -4,10 +4,14 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
+import rx.Observable;
+
 public interface FavoritesRepository {
-    ArrayList<String> getFavorites();
+    Observable<ArrayList<String>> getFavorites();
 
     void add(@NonNull String url);
 
     void remove(@NonNull String url);
+
+    boolean contains(@NonNull String url);
 }
